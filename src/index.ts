@@ -27,7 +27,13 @@ const prevLine = (await Deno.readTextFile(TEMP_FILE)).trim();
 const prevFreeSeats = Number.parseInt(prevLine.split('\t')[0]);
 const prevPrice = Number.parseInt(prevLine.split('\t')[1]);
 
-const route = await request<Route>(REQUEST_URL, { headers: { 'X-Currency': 'CZK' }});
+let route: Route;
+
+try {
+    route = await request<Route>(REQUEST_URL, { headers: { 'X-Currency': 'CZK' }});
+} catch {
+    Deno.exit();
+}
 
 const priceClass = route.priceClasses.find(priceClass => priceClass.seatClassKey === SEAT_CLASS);
 
